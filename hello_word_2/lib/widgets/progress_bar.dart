@@ -7,7 +7,7 @@ class ProgressBar extends StatefulWidget {
   final Category category;
   final double totalAmount;
 
-  ProgressBar({Key? key, required this.category, this.totalAmount = 0})
+  const ProgressBar({Key? key, required this.category, this.totalAmount = 0})
       : super(key: key);
 
   @override
@@ -16,19 +16,19 @@ class ProgressBar extends StatefulWidget {
 
 class _ProgressBarState extends State<ProgressBar> {
   late double tempCost = widget.category.maxAmount - widget.totalAmount > 0 ? widget.category.maxAmount - widget.totalAmount : 0;
+  late var _buildWidget = _CustomColum;
 
   Color creatColor() {
-    if (1 - widget.totalAmount / widget.category.maxAmount > 0.5) {
+    if (tempCost / widget.category.maxAmount > 0.5) {
       return Colors.green;
-    } else if (1 - widget.totalAmount / widget.category.maxAmount > 0.3) {
+    } else if (tempCost / widget.category.maxAmount > 0.3) {
       return Colors.orange;
     } else {
       return Colors.redAccent;
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _CustomColum() {
     return Column(
       children: [
         Padding(
@@ -74,5 +74,18 @@ class _ProgressBarState extends State<ProgressBar> {
         )
       ],
     );
+  }
+
+  @override
+  void initState() {
+    setState((){
+      _buildWidget = _CustomColum;
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildWidget();
   }
 }

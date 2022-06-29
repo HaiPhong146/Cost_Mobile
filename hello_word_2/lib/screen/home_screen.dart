@@ -15,6 +15,41 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   var exp = RandomNumber();
+  int count = 0;
+  late Widget Function(int index) buidWidget = _customWidget;
+
+  callback(){
+    setState(() {
+      exp = RandomNumber();
+      buidWidget = _customWidget;
+    });
+  }
+
+  Widget _customWidget(int index) {
+    double sum = 0;
+    for (Expense expense in exp.categories[index - 1].expenses) {
+      sum += expense.cost;
+    }
+    print(sum);
+    return Container(
+      margin: const EdgeInsets.symmetric(
+          vertical: 10.0, horizontal: 20.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: const [
+          BoxShadow(
+              color: Colors.black38,
+              offset: Offset(0, 2),
+              blurRadius: 6.0),
+        ],
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: ProgressBar(
+        category: exp.categories[index - 1],
+        totalAmount: sum,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,14 +111,9 @@ class _HomeState extends State<Home> {
                     ],
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  child: BarChart(expenses: exp.weeklySpending, ),
+                  child: BarChart(expenses: exp.weeklySpending, callbackfunction: callback,),
                 );
               } else {
-                double sum = 0;
-                exp = RandomNumber();
-                for (Expense expense in exp.categories[index - 1].expenses) {
-                  sum += expense.cost;
-                }
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -92,24 +122,7 @@ class _HomeState extends State<Home> {
                             builder: (_) => CategoryScreen(
                                 category: exp.categories[index - 1])));
                   },
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 20.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: const [
-                        BoxShadow(
-                            color: Colors.black38,
-                            offset: Offset(0, 2),
-                            blurRadius: 6.0),
-                      ],
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: ProgressBar(
-                      category: exp.categories[index - 1],
-                      totalAmount: sum,
-                    ),
-                  ),
+                  child: buidWidget(index)
                 );
               }
             }, childCount: exp.categories.length + 1),

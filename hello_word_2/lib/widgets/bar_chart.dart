@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 import '../data/data.dart';
 
 class BarChart extends StatefulWidget {
    final List<double> expenses;
+   final Function callbackfunction;
 
    const BarChart({
     Key? key,
-    required this.expenses
+    required this.expenses, required this.callbackfunction
   }) : super(key: key);
 
   @override
@@ -103,6 +102,7 @@ class _BarChartState extends State<BarChart> {
                 onPressed: () {
                   now = now.subtract(const Duration(days: 7));
                   setState(() {
+                    widget.callbackfunction();
                     _firstDay = DateFormat.yMMMd()
                         .format(findFirstDateOfTheWeek(now))
                         .toString();
@@ -129,6 +129,7 @@ class _BarChartState extends State<BarChart> {
                 onPressed: () {
                   now = now.add(const Duration(days: 7));
                   setState(() {
+                    widget.callbackfunction();
                     _firstDay = DateFormat.yMMMd()
                         .format(findFirstDateOfTheWeek(now))
                         .toString();

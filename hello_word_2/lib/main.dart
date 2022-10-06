@@ -3,6 +3,7 @@ import 'package:hello_word_2/screen/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
+
 }
 
 class MyApp extends StatefulWidget {
